@@ -17,7 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,24 +36,23 @@ public class ConcurrentSpaceInjector
 
   public static void main(String[] args)
   {
-    int spaceNumber = 1;
-    /*int fromUser = 0;
-    int toUser = 9;*/
     String userPrefix = "bench.user";
     String spacePrefix = (args.length > 0 && !StringUtils.isEmpty(args[0])) ? args[0] : "aspace";
-    String spaceInjectionURL = "http://localhost:8080/rest/private/bench/inject/space";
+    String spaceInjectionBaseURL = "http://localhost:8080/rest/private/bench/inject/custom-space-injector";
     ConcurrentSpaceInjector spaceInjector = new ConcurrentSpaceInjector();
     ExecutorService executor = Executors.newFixedThreadPool(spaceInjector.getThreadPoolSize());
     spaceInjector.login("root", "gtn");
     for (int i = 0; i < spaceInjector.getThreadPoolSize(); i++)
     {
+      Map<String,String> params = new HashMap<>();
+      params.put("spaceCreator", userPrefix + i);
+      params.put("spaceName", spacePrefix + i);
+      params.put("userPrefix", userPrefix);
+      params.put("spacePrefix", spacePrefix);
+
       SpaceCreator worker = new SpaceCreator(spaceInjector.getHttpClient(),
-          spaceNumber,
-          spaceInjectionURL,
-          i,
-          i,
-          userPrefix,
-          spacePrefix + i);
+          spaceInjectionBaseURL,
+          params);
       executor.execute(worker);
     }
     executor.shutdown();

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Created by eXo Platform MEA on 26/08/14.
@@ -19,29 +20,31 @@ import java.io.UnsupportedEncodingException;
 public class SpaceCreator implements Runnable
 {
   private final Logger LOG = LoggerFactory.getLogger("org.exoplatform.support.injector.worker.SpaceCreator");
-  private final String SPACE_INJECTION_URL;
+  private static final char EQUAL_CHAR = '=';
+  private static final char AMPERSAND = '&';
+  private final String SPACE_INJECTION_FINAL_URL;
   private final CloseableHttpClient httpClient;
-  private final String spaceNumber;
-  private final String fromUser;
-  private final String toUser;
-  private final String userPrefix;
-  private final String spacePrefix;
 
   public SpaceCreator(CloseableHttpClient httpClient,
-                      int spaceNumber,
                       String spaceInjectionURL,
-                      int fromUser,
-                      int toUser,
-                      String userPrefix,
-                      String spacePrefix)
+                      Map<String,String> queryParams)
   {
     this.httpClient = httpClient;
-    this.SPACE_INJECTION_URL = spaceInjectionURL;
-    this.spaceNumber = String.valueOf(spaceNumber);
-    this.fromUser = String.valueOf(fromUser);
-    this.toUser = String.valueOf(toUser);
-    this.userPrefix = userPrefix;
-    this.spacePrefix = spacePrefix;
+    StringBuilder urlBuilder = new StringBuilder(spaceInjectionURL);
+    boolean isFirstParam = true;
+    for(Map.Entry param : queryParams.entrySet())
+    {
+      if(isFirstParam)
+      {
+        urlBuilder.append("?");
+        isFirstParam = false;
+      } else
+      {
+        urlBuilder.append(AMPERSAND);
+      }
+      urlBuilder.append(param.getKey()).append(EQUAL_CHAR).append(param.getValue());
+    }
+    SPACE_INJECTION_FINAL_URL = urlBuilder.toString();
   }
 
   @Override
@@ -50,14 +53,7 @@ public class SpaceCreator implements Runnable
     CloseableHttpResponse response;
     try
     {
-      StringBuilder urlBuilder = new StringBuilder(SPACE_INJECTION_URL);
-      String ampersand = "&";
-      urlBuilder.append("?number=").append(spaceNumber)
-          .append(ampersand).append("fromUser=").append(fromUser)
-          .append(ampersand).append("toUser=").append(toUser)
-          .append(ampersand).append("userPrefix=").append(userPrefix)
-          .append(ampersand).append("spacePrefix=").append(spacePrefix);
-      HttpGet injectRequest = new HttpGet(urlBuilder.toString());
+      HttpGet injectRequest = new HttpGet(SPACE_INJECTION_FINAL_URL);
       response = httpClient.execute(injectRequest);
       try {
         HttpEntity entity = response.getEntity();
