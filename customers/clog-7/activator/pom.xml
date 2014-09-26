@@ -3,14 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>support-bench</artifactId>
+    <artifactId>clog-7</artifactId>
     <groupId>org.exoplatform.support</groupId>
     <version>1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>customers</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-    <module>clog-7</module>
-  </modules>
+
+  <artifactId>activator</artifactId>
+  <packaging>jar</packaging>
+  <name>CLOG-7 Activator</name>
+  <description>Gridster Portlet Resource Activator</description>
+
+  <build>
+    <finalName>clog-7-gridster-portlet-activator</finalName>
+  </build>
+
 </project>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>clog-7</artifactId>
+    <groupId>org.exoplatform.support</groupId>
+    <version>1.0</version>
+  </parent>
+
+  <artifactId>portlet</artifactId>
+  <packaging>war</packaging>
+  <name>CLOG-7 Portlet</name>
+  <description>Gridster Portlet</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>javax.portlet</groupId>
+      <artifactId>portlet-api</artifactId>
+      <version>2.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>clog-7-gridster-portlet</finalName>
+  </build>
+
+</project>

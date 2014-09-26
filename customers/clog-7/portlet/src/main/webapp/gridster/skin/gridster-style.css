@@ -1,0 +1,12 @@
+#GRIDSTER-PORTLET {
+    text-align: center;
+}
+
+.gridster ul {
+    background: none repeat scroll 0% 0% #004756;
+}
+
+.gridster ul li {
+    cursor: pointer;
+    background: none repeat scroll 0% 0% #FFF;
+}
