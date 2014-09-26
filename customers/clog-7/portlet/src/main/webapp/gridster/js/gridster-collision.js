@@ -1,7 +1,20 @@
-/**
- * Created by exo on 25/09/14.
- */
-(this, function($, Coords) {
+/*
+* jquery.collision
+* https://github.com/ducksboard/gridster.js
+*
+* Copyright (c) 2012 ducksboard
+* Licensed under the MIT licenses.
+*/
+
+(function(root, factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    define('gridster-collision', ['jquery', 'gridster-coords'], factory);
+  } else {
+    return root.GridsterCollision = factory(jQ, gdCoords);
+  }
+
+}(this, function($, Coords) {
 
   var defaults = {
     colliders_context: document.body,
@@ -225,4 +238,4 @@
 
   return Collision;
 
-})(jQ, gdCoords);
+}));

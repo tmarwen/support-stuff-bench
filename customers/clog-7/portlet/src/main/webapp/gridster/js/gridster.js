@@ -1,13 +1,20 @@
 /*
- * jquery.gridster
- * https://github.com/ducksboard/gridster.js
- *
- * Copyright (c) 2012 ducksboard
- * Licensed under the MIT licenses.
- */
-(this, function($, Draggable, Collision) {
+* jquery.gridster
+* https://github.com/ducksboard/gridster.js
+*
+* Copyright (c) 2012 ducksboard
+* Licensed under the MIT licenses.
+*/
 
-  var jQuery = $;
+(function(root, factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    define(['jquery', 'gridster-draggable', 'gridster-collision'], factory);
+  } else {
+    return root.Gridster = factory(jQ, gdDraggable, gdCollision);
+  }
+
+}(this, function($, Draggable, Collision) {
 
   var defaults = {
     namespace: '',
@@ -54,71 +61,71 @@
    * @uses Collision
    * @param {HTMLElement} el The HTMLelement that contains all the widgets.
    * @param {Object} [options] An Object with all options you want to
-   *        overwrite:
-   *    @param {HTMLElement|String} [options.widget_selector] Define who will
-   *     be the draggable widgets. Can be a CSS Selector String or a
-   *     collection of HTMLElements
-   *    @param {Array} [options.widget_margins] Margin between widgets.
-   *     The first index for the horizontal margin (left, right) and
-   *     the second for the vertical margin (top, bottom).
-   *    @param {Array} [options.widget_base_dimensions] Base widget dimensions
-   *     in pixels. The first index for the width and the second for the
-   *     height.
-   *    @param {Number} [options.extra_cols] Add more columns in addition to
-   *     those that have been calculated.
-   *    @param {Number} [options.extra_rows] Add more rows in addition to
-   *     those that have been calculated.
-   *    @param {Number} [options.min_cols] The minimum required columns.
-   *    @param {Number} [options.max_cols] The maximum columns possible (set to null
-   *     for no maximum).
-   *    @param {Number} [options.min_rows] The minimum required rows.
-   *    @param {Number} [options.max_size_x] The maximum number of columns
-   *     that a widget can span.
-   *    @param {Boolean} [options.autogenerate_stylesheet] If true, all the
-   *     CSS required to position all widgets in their respective columns
-   *     and rows will be generated automatically and injected to the
-   *     `<head>` of the document. You can set this to false, and write
-   *     your own CSS targeting rows and cols via data-attributes like so:
-   *     `[data-col="1"] { left: 10px; }`
-   *    @param {Boolean} [options.avoid_overlapped_widgets] Avoid that widgets loaded
-   *     from the DOM can be overlapped. It is helpful if the positions were
-   *     bad stored in the database or if there was any conflict.
-   *    @param {Boolean} [options.auto_init] Automatically call gridster init
-   *     method or not when the plugin is instantiated.
-   *    @param {Function} [options.serialize_params] Return the data you want
-   *     for each widget in the serialization. Two arguments are passed:
-   *     `$w`: the jQuery wrapped HTMLElement, and `wgd`: the grid
-   *     coords object (`col`, `row`, `size_x`, `size_y`).
-   *    @param {Object} [options.collision] An Object with all options for
-   *     Collision class you want to overwrite. See Collision docs for
-   *     more info.
-   *    @param {Object} [options.draggable] An Object with all options for
-   *     Draggable class you want to overwrite. See Draggable docs for more
-   *     info.
-   *       @param {Object|Function} [options.draggable.ignore_dragging] Note that
-   *        if you use a Function, and resize is enabled, you should ignore the
-   *        resize handlers manually (options.resize.handle_class).
-   *    @param {Object} [options.resize] An Object with resize config options.
-   *       @param {Boolean} [options.resize.enabled] Set to true to enable
-   *        resizing.
-   *       @param {Array} [options.resize.axes] Axes in which widgets can be
-   *        resized. Possible values: ['x', 'y', 'both'].
-   *       @param {String} [options.resize.handle_append_to] Set a valid CSS
-   *        selector to append resize handles to.
-   *       @param {String} [options.resize.handle_class] CSS class name used
-   *        by resize handles.
-   *       @param {Array} [options.resize.max_size] Limit widget dimensions
-   *        when resizing. Array values should be integers:
-   *        `[max_cols_occupied, max_rows_occupied]`
-   *       @param {Array} [options.resize.min_size] Limit widget dimensions
-   *        when resizing. Array values should be integers:
-   *        `[min_cols_occupied, min_rows_occupied]`
-   *       @param {Function} [options.resize.start] Function executed
-   *        when resizing starts.
-   *       @param {Function} [otions.resize.resize] Function executed
-   *        during the resizing.
-   *       @param {Function} [options.resize.stop] Function executed
-   *        when resizing stops.
+   * overwrite:
+   * @param {HTMLElement|String} [options.widget_selector] Define who will
+   * be the draggable widgets. Can be a CSS Selector String or a
+   * collection of HTMLElements
+   * @param {Array} [options.widget_margins] Margin between widgets.
+   * The first index for the horizontal margin (left, right) and
+   * the second for the vertical margin (top, bottom).
+   * @param {Array} [options.widget_base_dimensions] Base widget dimensions
+   * in pixels. The first index for the width and the second for the
+   * height.
+   * @param {Number} [options.extra_cols] Add more columns in addition to
+   * those that have been calculated.
+   * @param {Number} [options.extra_rows] Add more rows in addition to
+   * those that have been calculated.
+   * @param {Number} [options.min_cols] The minimum required columns.
+   * @param {Number} [options.max_cols] The maximum columns possible (set to null
+   * for no maximum).
+   * @param {Number} [options.min_rows] The minimum required rows.
+   * @param {Number} [options.max_size_x] The maximum number of columns
+   * that a widget can span.
+   * @param {Boolean} [options.autogenerate_stylesheet] If true, all the
+   * CSS required to position all widgets in their respective columns
+   * and rows will be generated automatically and injected to the
+   * `<head>` of the document. You can set this to false, and write
+   * your own CSS targeting rows and cols via data-attributes like so:
+   * `[data-col="1"] { left: 10px; }`
+   * @param {Boolean} [options.avoid_overlapped_widgets] Avoid that widgets loaded
+   * from the DOM can be overlapped. It is helpful if the positions were
+   * bad stored in the database or if there was any conflict.
+   * @param {Boolean} [options.auto_init] Automatically call gridster init
+   * method or not when the plugin is instantiated.
+   * @param {Function} [options.serialize_params] Return the data you want
+   * for each widget in the serialization. Two arguments are passed:
+   * `$w`: the jQuery wrapped HTMLElement, and `wgd`: the grid
+   * coords object (`col`, `row`, `size_x`, `size_y`).
+   * @param {Object} [options.collision] An Object with all options for
+   * Collision class you want to overwrite. See Collision docs for
+   * more info.
+   * @param {Object} [options.draggable] An Object with all options for
+   * Draggable class you want to overwrite. See Draggable docs for more
+   * info.
+   * @param {Object|Function} [options.draggable.ignore_dragging] Note that
+   * if you use a Function, and resize is enabled, you should ignore the
+   * resize handlers manually (options.resize.handle_class).
+   * @param {Object} [options.resize] An Object with resize config options.
+   * @param {Boolean} [options.resize.enabled] Set to true to enable
+   * resizing.
+   * @param {Array} [options.resize.axes] Axes in which widgets can be
+   * resized. Possible values: ['x', 'y', 'both'].
+   * @param {String} [options.resize.handle_append_to] Set a valid CSS
+   * selector to append resize handles to.
+   * @param {String} [options.resize.handle_class] CSS class name used
+   * by resize handles.
+   * @param {Array} [options.resize.max_size] Limit widget dimensions
+   * when resizing. Array values should be integers:
+   * `[max_cols_occupied, max_rows_occupied]`
+   * @param {Array} [options.resize.min_size] Limit widget dimensions
+   * when resizing. Array values should be integers:
+   * `[min_cols_occupied, min_rows_occupied]`
+   * @param {Function} [options.resize.start] Function executed
+   * when resizing starts.
+   * @param {Function} [otions.resize.resize] Function executed
+   * during the resizing.
+   * @param {Function} [options.resize.stop] Function executed
+   * when resizing stops.
    *
    * @constructor
    */
@@ -307,7 +314,7 @@
    *
    * @method add_widget
    * @param {String|HTMLElement} html The string representing the HTML of the widget
-   *  or the HTMLElement.
+   * or the HTMLElement.
    * @param {Number} [size_x] The nº of rows the widget occupies horizontally.
    * @param {Number} [size_y] The nº of columns the widget occupies vertically.
    * @param {Number} [col] The column the widget should start in.
@@ -315,7 +322,7 @@
    * @param {Array} [max_size] max_size Maximun size (in units) for width and height.
    * @param {Array} [min_size] min_size Minimum size (in units) for width and height.
    * @return {HTMLElement} Returns the jQuery wrapped HTMLElement representing.
-   *  the widget that was just created.
+   * the widget that was just created.
    */
   fn.add_widget = function(html, size_x, size_y, col, row, max_size, min_size) {
     var pos;
@@ -371,7 +378,7 @@
    *
    * @method set_widget_min_size
    * @param {HTMLElement|Number} $widget The jQuery wrapped HTMLElement
-   *  representing the widget or an index representing the desired widget.
+   * representing the widget or an index representing the desired widget.
    * @param {Array} min_size Minimum size (in units) for width and height.
    * @return {HTMLElement} Returns instance of gridster Class.
    */
@@ -394,7 +401,7 @@
    *
    * @method set_widget_max_size
    * @param {HTMLElement|Number} $widget The jQuery wrapped HTMLElement
-   *  representing the widget or an index representing the desired widget.
+   * representing the widget or an index representing the desired widget.
    * @param {Array} max_size Maximun size (in units) for width and height.
    * @return {HTMLElement} Returns instance of gridster Class.
    */
@@ -417,7 +424,7 @@
    *
    * @method add_resize_handle
    * @param {HTMLElement} $widget The jQuery wrapped HTMLElement
-   *  representing the widget.
+   * representing the widget.
    * @return {HTMLElement} Returns instance of gridster Class.
    */
   fn.add_resize_handle = function($w) {
@@ -433,10 +440,10 @@
    *
    * @method resize_widget
    * @param {HTMLElement} $widget The jQuery wrapped HTMLElement
-   *  representing the widget.
+   * representing the widget.
    * @param {Number} size_x The number of columns that will occupy the widget.
-   *  By default <code>size_x</code> is limited to the space available from
-   *  the column where the widget begins, until the last column to the right.
+   * By default <code>size_x</code> is limited to the space available from
+   * the column where the widget begins, until the last column to the right.
    * @param {Number} size_y The number of rows that will occupy the widget.
    * @param {Function} [callback] Function executed when the widget is removed.
    * @return {HTMLElement} Returns $widget.
@@ -490,7 +497,7 @@
    *
    * @method mutate_widget_in_gridmap
    * @param {HTMLElement} $widget The jQuery wrapped HTMLElement
-   *  representing the widget to mutate.
+   * representing the widget to mutate.
    * @param {Object} wgd Current widget grid data (col, row, size_x, size_y).
    * @param {Object} new_wgd New widget grid data.
    * @return {HTMLElement} Returns instance of gridster Class.
@@ -618,7 +625,7 @@
     $nexts.not($exclude).each($.proxy(function(i, w) {
       var wgd = $(w).coords().grid;
       if ( !(wgd.row <= (row + size_y - 1))) { return; }
-      var diff =  (row + size_y) - wgd.row;
+      var diff = (row + size_y) - wgd.row;
       this.move_widget_down($(w), diff);
     }, this));
 
@@ -667,7 +674,7 @@
    * @param {Number} size_x The nº of rows the widget occupies horizontally.
    * @param {Number} size_y The nº of columns the widget occupies vertically.
    * @return {Object} Returns a grid coords object representing the future
-   *  widget coords.
+   * widget coords.
    */
   fn.next_position = function(size_x, size_y) {
     size_x || (size_x = 1);
@@ -771,10 +778,10 @@
    *
    * @method serialize
    * @param {HTMLElement} [$widgets] The collection of jQuery wrapped
-   *  HTMLElements you want to serialize. If no argument is passed all widgets
-   *  will be serialized.
+   * HTMLElements you want to serialize. If no argument is passed all widgets
+   * will be serialized.
    * @return {Array} Returns an Array of Objects with the data specified in
-   *  the serialize_params option.
+   * the serialize_params option.
    */
   fn.serialize = function($widgets) {
     $widgets || ($widgets = this.$widgets);
@@ -788,11 +795,11 @@
 
   /**
    * Returns a serialized array of the widgets that have changed their
-   *  position.
+   * position.
    *
    * @method serialize_changed
    * @return {Array} Returns an Array of Objects with the data specified in
-   *  the serialize_params option.
+   * the serialize_params option.
    */
   fn.serialize_changed = function() {
     return this.serialize(this.$changed);
@@ -826,12 +833,12 @@
    *
    * @method register_widget
    * @param {HTMLElement|Object} $el jQuery wrapped HTMLElement representing
-   *  the widget, or an "widget grid data" Object with (col, row, el ...).
+   * the widget, or an "widget grid data" Object with (col, row, el ...).
    * @return {Boolean} Returns true if the widget final position is different
-   *  than the original.
+   * than the original.
    */
   fn.register_widget = function($el) {
-    var isDOM = $el instanceof jQuery;
+    var isDOM = $el instanceof $;
     var wgd = isDOM ? this.dom_to_coords($el) : $el;
     var posChanged = false;
     isDOM || ($el = wgd.el);
@@ -876,10 +883,10 @@
    * the grid coords object passed in the `grid_data` param.
    *
    * @param {Object} grid_data The grid coords object representing the cells
-   *  to update in the mapped array.
+   * to update in the mapped array.
    * @param {HTMLElement|Boolean} value Pass `false` or the jQuery wrapped
-   *  HTMLElement, depends if you want to delete an existing position or add
-   *  a new one.
+   * HTMLElement, depends if you want to delete an existing position or add
+   * a new one.
    * @method update_widget_position
    * @return {Class} Returns the instance of the Gridster Class.
    */
@@ -897,7 +904,7 @@
    *
    * @method remove_from_gridmap
    * @param {Object} grid_data The grid coords object representing the cells
-   *  to update in the mapped array.
+   * to update in the mapped array.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.remove_from_gridmap = function(grid_data) {
@@ -910,9 +917,9 @@
    *
    * @method add_to_gridmap
    * @param {Object} grid_data The grid coords object representing the cells
-   *  to update in the mapped array.
+   * to update in the mapped array.
    * @param {HTMLElement|Boolean} value The value to set in the specified
-   *  position .
+   * position .
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.add_to_gridmap = function(grid_data, value) {
@@ -1405,9 +1412,9 @@
    * overlapped or stops being overlapped.
    *
    * @param {Function} start_callback Function executed when a new column
-   *  begins to be overlapped. The column is passed as first argument.
+   * begins to be overlapped. The column is passed as first argument.
    * @param {Function} stop_callback Function executed when a column stops
-   *  being overlapped. The column is passed as first argument.
+   * being overlapped. The column is passed as first argument.
    * @method on_overlapped_column_change
    * @return {Class} Returns the instance of the Gridster Class.
    */
@@ -1445,9 +1452,9 @@
    * overlapped or stops being overlapped.
    *
    * @param {Function} start_callback Function executed when a new row begins
-   *  to be overlapped. The row is passed as first argument.
+   * to be overlapped. The row is passed as first argument.
    * @param {Function} end_callback Function executed when a row stops being
-   *  overlapped. The row is passed as first argument.
+   * overlapped. The row is passed as first argument.
    * @method on_overlapped_row_change
    * @return {Class} Returns the instance of the Gridster Class.
    */
@@ -1513,7 +1520,7 @@
     this.manage_movements(constraints.can_not_go_up, to_col, to_row);
 
     /* if there is not widgets overlapping in the new player position,
-     * update the new placeholder position. */
+    * update the new placeholder position. */
     if (!$overlapped_widgets.length) {
       var pp = this.can_go_player_up(this.player_grid_data);
       if (pp !== false) {
@@ -1571,7 +1578,7 @@
    *
    * @method manage_movements
    * @param {jQuery} $widgets A jQuery collection of HTMLElements
-   *  representing the widgets you want to move.
+   * representing the widgets you want to move.
    * @param {Number} to_col The column to which we want to move the widgets.
    * @param {Number} to_row The row to which we want to move the widgets.
    * @return {Class} Returns the instance of the Gridster Class.
@@ -1780,9 +1787,9 @@
    *
    * @method set_placeholder
    * @param {Number} col The column to which we want to move the
-   *  placeholder.
+   * placeholder.
    * @param {Number} row The row to which we want to move the
-   *  placeholder.
+   * placeholder.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.set_placeholder = function(col, row) {
@@ -1840,9 +1847,9 @@
    *
    * @method can_go_player_up
    * @param {Object} widget_grid_data The actual grid coords object of the
-   *  player.
+   * player.
    * @return {Number|Boolean} If the player can be moved to an upper row
-   *  returns the row number, else returns false.
+   * returns the row number, else returns false.
    */
   fn.can_go_player_up = function(widget_grid_data) {
     var p_bottom_row = widget_grid_data.row + widget_grid_data.size_y - 1;
@@ -1852,7 +1859,7 @@
     var $widgets_under_player = this.get_widgets_under_player();
 
     /* generate an array with columns as index and array with upper rows
-     * empty as value */
+    * empty as value */
     this.for_each_column_occupied(widget_grid_data, function(tcol) {
       var grid_col = this.gridmap[tcol];
       var r = p_bottom_row + 1;
@@ -1891,9 +1898,9 @@
    *
    * @method can_go_widget_up
    * @param {Object} widget_grid_data The actual grid coords object of the
-   *  widget we want to check.
+   * widget we want to check.
    * @return {Number|Boolean} If the widget can be moved to an upper row
-   *  returns the row number, else returns false.
+   * returns the row number, else returns false.
    */
   fn.can_go_widget_up = function(widget_grid_data) {
     var p_bottom_row = widget_grid_data.row + widget_grid_data.size_y - 1;
@@ -1902,7 +1909,7 @@
     var min_row = 10000;
 
     /* generate an array with columns as index and array with topmost rows
-     * empty as value */
+    * empty as value */
     this.for_each_column_occupied(widget_grid_data, function(tcol) {
       var grid_col = this.gridmap[tcol];
       upper_rows[tcol] = [];
@@ -1949,12 +1956,12 @@
    *
    * @method get_valid_rows
    * @param {Object} widget_grid_data The actual grid coords object of the
-   *  player.
+   * player.
    * @param {Array} upper_rows An array with columns as index and arrays
-   *  of valid rows as values.
+   * of valid rows as values.
    * @param {Number} min_row The upper row from which the iteration will start.
    * @return {Number|Boolean} Returns the upper row valid from the `upper_rows`
-   *  for the widget in question.
+   * for the widget in question.
    */
   fn.get_valid_rows = function(widget_grid_data, upper_rows, min_row) {
     var p_top_row = widget_grid_data.row;
@@ -2210,7 +2217,7 @@
    *
    * @method move_widget_down
    * @param {jQuery} $widget The jQuery object representing the widget
-   *  you want to move.
+   * you want to move.
    * @param {Number} y_units The number of cells that the widget has to move.
    * @return {Class} Returns the instance of the Gridster Class.
    */
@@ -2261,11 +2268,11 @@
    *
    * @method can_go_up_to_row
    * @param {Number} widget_grid_data The current grid coords object of the
-   *  widget.
+   * widget.
    * @param {Number} col The target column.
    * @param {Number} row The target row.
    * @return {Boolean|Number} Returns the row number if the widget can move
-   *  to the target position, else returns false.
+   * to the target position, else returns false.
    */
   fn.can_go_up_to_row = function(widget_grid_data, col, row) {
     var ga = this.gridmap;
@@ -2275,7 +2282,7 @@
     var r;
 
     /* generate an array with columns as index and array with
-     * upper rows empty in the column */
+    * upper rows empty in the column */
     this.for_each_column_occupied(widget_grid_data, function(tcol) {
       var grid_col = ga[tcol];
       urc[tcol] = [];
@@ -2301,7 +2308,7 @@
     if (!result) { return false; }
 
     /* get common rows starting from upper position in all the columns
-     * that widget occupies */
+    * that widget occupies */
     r = row;
     for (r = 1; r < actual_row; r++) {
       var common = true;
@@ -2432,11 +2439,11 @@
   /**
    * Check if it's possible to move a widget to a specific col/row. It takes
    * into account the dimensions (`size_y` and `size_x` attrs. of the grid
-   *  coords object) the widget occupies.
+   * coords object) the widget occupies.
    *
    * @method can_move_to
    * @param {Object} widget_grid_data The grid coords object that represents
-   *  the widget.
+   * the widget.
    * @param {Object} col The col to check.
    * @param {Object} row The row to check.
    * @param {Number} [max_row] The max row allowed.
@@ -2476,7 +2483,7 @@
 
   /**
    * Given the leftmost column returns all columns that are overlapping
-   *  with the player.
+   * with the player.
    *
    * @method get_targeted_columns
    * @param {Number} [from_col] The leftmost column.
@@ -2544,9 +2551,9 @@
    *
    * @method for_each_cell_occupied
    * @param {Object} el_grid_data The grid coords object that represents the
-   *  widget.
+   * widget.
    * @param {Function} callback The function to execute on each column
-   *  iteration. Column and row are passed as arguments.
+   * iteration. Column and row are passed as arguments.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.for_each_cell_occupied = function(grid_data, callback) {
@@ -2565,9 +2572,9 @@
    *
    * @method for_each_column_occupied
    * @param {Object} el_grid_data The grid coords object that represents
-   *  the widget.
+   * the widget.
    * @param {Function} callback The function to execute on each column
-   *  iteration. The column number is passed as first argument.
+   * iteration. The column number is passed as first argument.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.for_each_column_occupied = function(el_grid_data, callback) {
@@ -2584,9 +2591,9 @@
    *
    * @method for_each_row_occupied
    * @param {Object} el_grid_data The grid coords object that represents
-   *  the widget.
+   * the widget.
    * @param {Function} callback The function to execute on each column
-   *  iteration. The row number is passed as first argument.
+   * iteration. The row number is passed as first argument.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.for_each_row_occupied = function(el_grid_data, callback) {
@@ -2652,8 +2659,8 @@
    * @param {Number} col The column to start iterating.
    * @param {Number} row The row to start iterating.
    * @param {Function} callback The function to execute on each widget
-   *  iteration. The value of `this` inside the function is the jQuery
-   *  wrapped HTMLElement.
+   * iteration. The value of `this` inside the function is the jQuery
+   * wrapped HTMLElement.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.for_each_widget_above = function(col, row, callback) {
@@ -2669,8 +2676,8 @@
    * @param {Number} col The column to start iterating.
    * @param {Number} row The row to start iterating.
    * @param {Function} callback The function to execute on each widget
-   *  iteration. The value of `this` inside the function is the jQuery wrapped
-   *  HTMLElement.
+   * iteration. The value of `this` inside the function is the jQuery wrapped
+   * HTMLElement.
    * @return {Class} Returns the instance of the Gridster Class.
    */
   fn.for_each_widget_below = function(col, row, callback) {
@@ -2873,7 +2880,7 @@
   /**
    * Remove the style tag with the associated id from the head of the document
    *
-   * @method  remove_style_tag
+   * @method remove_style_tag
    * @return {Object} Returns the instance of the Gridster class.
    */
   fn.remove_style_tags = function() {
@@ -3048,7 +3055,7 @@
 
   /**
    * Calculate columns and rows to be set based on the configuration
-   *  parameters, grid dimensions, etc ...
+   * parameters, grid dimensions, etc ...
    *
    * @method generate_grid_and_stylesheet
    * @return {Object} Returns the instance of the Gridster class.
@@ -3129,4 +3136,4 @@
 
   return Gridster;
 
-})(jQ, gdDraggable, gdCollision);
+}));

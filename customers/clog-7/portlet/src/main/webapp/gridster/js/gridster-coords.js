@@ -1,7 +1,20 @@
-/**
- * Created by exo on 25/09/14.
- */
-(this, function($) {
+/*
+* jquery.coords
+* https://github.com/ducksboard/gridster.js
+*
+* Copyright (c) 2012 ducksboard
+* Licensed under the MIT licenses.
+*/
+
+(function(root, factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    define('gridster-coords', ['jquery'], factory);
+  } else {
+    return root.GridsterCoords = factory(jQ);
+  }
+
+}(this, function($) {
   /**
    * Creates objects with coordinates (x1, y1, x2, y2, cx, cy, width, height)
    * to simulate DOM elements on the screen.
@@ -109,4 +122,4 @@
 
   return Coords;
 
-})(jQ);
+}));

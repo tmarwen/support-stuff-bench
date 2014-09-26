@@ -1,7 +1,20 @@
-/**
- * Created by exo on 25/09/14.
- */
-(this, function($) {
+/*
+* jquery.draggable
+* https://github.com/ducksboard/gridster.js
+*
+* Copyright (c) 2012 ducksboard
+* Licensed under the MIT licenses.
+*/
+
+(function(root, factory) {
+
+  if (typeof define === 'function' && define.amd) {
+    define('gridster-draggable', ['jquery'], factory);
+  } else {
+    return root.GridsterDraggable = factory(jQ);
+  }
+
+}(this, function($) {
 
   var defaults = {
     items: 'li',
@@ -416,4 +429,4 @@
 
   return Draggable;
 
-})(jQ);
+}));
